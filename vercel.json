@@ -1,0 +1,16 @@
+{
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "Permissions-Policy",
+            "value": "attribution-reporting=(), run-ad-auction=(), join-ad-interest-group=(), compute-pressure=(), browsing-topics=()"
+          }
+        ]
+      }
+    ],
+    "env": {
+      "VITE_GOOGLE_MAPS_API_KEY": "@vite_google_maps_api_key"
+    }
+  }
