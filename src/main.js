@@ -1,19 +1,7 @@
 import './style.css'
 
 // Get API key from environment
-const MAPS_API_KEY = GOOGLE_MAPS_API_KEY;
-
-// Verify API key is available
-if (!MAPS_API_KEY) {
-  console.error('Google Maps API key is not configured');
-}
-
-// Load Google Maps API
-const script = document.createElement('script');
-script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&callback=initMap&libraries=maps,marker&v=beta`;
-script.async = true;
-script.defer = true;
-document.head.appendChild(script);
+const MAPS_API_KEY = GOOGLE_MAPS_API_KEY || '';
 
 // Initialize map first
 window.initMap = function() {
