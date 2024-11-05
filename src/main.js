@@ -1,9 +1,11 @@
 import './style.css'
 
-// Get API key from environment
-const MAPS_API_KEY = GOOGLE_MAPS_API_KEY;
+// Safely get the API key
+const MAPS_API_KEY = typeof GOOGLE_MAPS_API_KEY !== 'undefined' ? GOOGLE_MAPS_API_KEY : '';
 
-// Initialize map configuration first
+// Debug log (remove in production)
+console.log('API Key status:', MAPS_API_KEY ? 'Present' : 'Missing');
+
 const mapConfig = {
   initializeMap: function() {
     const mapElement = document.querySelector('gmp-map');
@@ -69,50 +71,44 @@ const mapConfig = {
   }
 };
 
-// Load Google Maps API properly
 function loadGoogleMapsAPI() {
   return new Promise((resolve, reject) => {
     if (!MAPS_API_KEY) {
+      console.error('Missing API Key. Checking environment:', {
+        hasKey: !!GOOGLE_MAPS_API_KEY,
+        envVars: Object.keys(import.meta.env)
+      });
       reject(new Error('Google Maps API key is not defined'));
       return;
     }
 
-    // Create script element
     const script = document.createElement('script');
-    
-    // Set up loading handlers
-    script.onload = () => {
-      console.log('Google Maps API loaded successfully');
-      resolve();
-    };
-    
-    script.onerror = () => {
-      reject(new Error('Failed to load Google Maps API'));
-    };
-
-    // Configure script attributes
     script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=maps,marker&v=beta`;
     script.async = true;
     script.defer = true;
 
-    // Append script to head
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Google Maps API'));
+
     document.head.appendChild(script);
   });
 }
 
-// Initialize everything properly
 async function initialize() {
   try {
     await loadGoogleMapsAPI();
     mapConfig.initializeMap();
   } catch (error) {
     console.error('Initialization error:', error);
+    // Add visible error message for users
+    document.body.innerHTML += `
+      <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                  background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h3>Map loading error</h3>
+        <p>Please try refreshing the page. If the problem persists, contact support.</p>
+      </div>
+    `;
   }
 }
 
-// Wait for DOM content to be loaded before initializing
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initialize);
-} else {
-  initialize();
-}
+document.addEventListener('DOMContentLoaded', initialize);
