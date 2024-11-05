@@ -1,0 +1,21 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+gmp-map {
+  height: 100%;
+  width: 100%;
+}
+
+.city-info {
+  font-family: 'Google Sans', Arial, sans-serif;
+  font-size: 14px;
+  padding: 8px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
